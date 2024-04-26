@@ -1,0 +1,26 @@
+SHELL=/bin/bash
+VENV=venv
+
+setup:
+	@echo $@: Setting up Python virtual environment...
+	@python3 -m venv $(VENV) &&\
+		echo Run to activate: .\$(VENV)\Scripts\Activate.ps1
+
+install:
+	pip install --upgrade pip &&\
+		pip install -r ./src/requirements.txt
+
+test:
+	python -m pytest -vv ./src/test_app.py
+
+format:
+	black ./src/*.py
+
+lint:
+	pylint --disable=R,C ./src/app.py
+
+.PHONY: clean
+clean:
+	rmdir /s /q .\$(VENV)
+
+all: install lint test
